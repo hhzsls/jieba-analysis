@@ -1,25 +1,21 @@
-package com.huaban.analysis.jieba;
+package com.huaban.analysis.misearch.jieba;
 
 import java.io.BufferedReader;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Map;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 
 
 public class WordDictionary {
-    private static WordDictionary singleton;
     private static final String MAIN_DICT = "/dict.txt";
+    private static WordDictionary singleton;
     private static String USER_DICT_SUFFIX = ".dict";
 
     public final Map<String, Double> freqs = new HashMap<String, Double>();
@@ -49,7 +45,7 @@ public class WordDictionary {
 
     /**
      * for ES to initialize the user dictionary.
-     * 
+     *
      * @param configFile
      */
     public void init(Path configFile) {
@@ -58,11 +54,11 @@ public class WordDictionary {
         synchronized (WordDictionary.class) {
             if (loadedPath.contains(abspath))
                 return;
-            
+
             DirectoryStream<Path> stream;
             try {
                 stream = Files.newDirectoryStream(configFile, String.format(Locale.getDefault(), "*%s", USER_DICT_SUFFIX));
-                for (Path path: stream){
+                for (Path path : stream) {
                     System.err.println(String.format(Locale.getDefault(), "loading dict %s", path.toString()));
                     singleton.loadUserDict(path);
                 }
@@ -74,14 +70,14 @@ public class WordDictionary {
             }
         }
     }
-    
-    
+
+
     /**
      * let user just use their own dict instead of the default dict
      */
-    public void resetDict(){
-    	_dict = new DictSegment((char) 0);
-    	freqs.clear();
+    public void resetDict() {
+        _dict = new DictSegment((char) 0);
+        freqs.clear();
     }
 
 
@@ -111,17 +107,14 @@ public class WordDictionary {
                 minFreq = Math.min(entry.getValue(), minFreq);
             }
             System.out.println(String.format(Locale.getDefault(), "main dict load finished, time elapsed %d ms",
-                System.currentTimeMillis() - s));
-        }
-        catch (IOException e) {
+                    System.currentTimeMillis() - s));
+        } catch (IOException e) {
             System.err.println(String.format(Locale.getDefault(), "%s load failure!", MAIN_DICT));
-        }
-        finally {
+        } finally {
             try {
                 if (null != is)
                     is.close();
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 System.err.println(String.format(Locale.getDefault(), "%s close failure!", MAIN_DICT));
             }
         }
@@ -133,8 +126,7 @@ public class WordDictionary {
             String key = word.trim().toLowerCase(Locale.getDefault());
             _dict.fillSegment(key.toCharArray());
             return key;
-        }
-        else
+        } else
             return null;
     }
 
@@ -144,7 +136,7 @@ public class WordDictionary {
     }
 
 
-    public void loadUserDict(Path userDict, Charset charset) {                
+    public void loadUserDict(Path userDict, Charset charset) {
         try {
             BufferedReader br = Files.newBufferedReader(userDict, charset);
             long s = System.currentTimeMillis();
@@ -163,14 +155,13 @@ public class WordDictionary {
                 double freq = 3.0d;
                 if (tokens.length == 2)
                     freq = Double.valueOf(tokens[1]);
-                word = addWord(word); 
+                word = addWord(word);
                 freqs.put(word, Math.log(freq / total));
                 count++;
             }
             System.out.println(String.format(Locale.getDefault(), "user dict %s load finished, tot words:%d, time elapsed:%dms", userDict.toString(), count, System.currentTimeMillis() - s));
             br.close();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             System.err.println(String.format(Locale.getDefault(), "%s: load user dict failure!", userDict.toString()));
         }
     }

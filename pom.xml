@@ -1,5 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.sonatype.oss</groupId>
@@ -8,7 +8,7 @@
     </parent>
     <groupId>com.huaban</groupId>
     <artifactId>jieba-analysis</artifactId>
-    <version>1.0.3-SNAPSHOT</version>
+    <version>1.0.3-mds-0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>结巴分词工具(jieba for java)</name>
@@ -51,11 +51,6 @@
             <artifactId>junit</artifactId>
             <version>4.8</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.3.1</version>
         </dependency>
     </dependencies>
 
@@ -120,39 +115,39 @@
                 </executions>
             </plugin>
             <plugin>
-              <groupId>de.thetaphi</groupId>
-              <artifactId>forbiddenapis</artifactId>
-              <version>1.8</version>
-              <configuration>
-                <!-- disallow undocumented classes like sun.misc.Unsafe: -->
-                <internalRuntimeForbidden>true</internalRuntimeForbidden>
-                <!--
-                  if the used Java version is too new,
-                  don't fail, just do nothing:
-                -->
-                <failOnUnsupportedJava>false</failOnUnsupportedJava>
-                <bundledSignatures>
-                  <!--
-                    This will automatically choose the right
-                    signatures based on 'maven.compiler.target':
-                  -->
-                  <bundledSignature>jdk-unsafe</bundledSignature>
-                  <bundledSignature>jdk-deprecated</bundledSignature>
-                </bundledSignatures>
-                <!--
-                <signaturesFiles>
-                  <signaturesFile>./rel/path/to/signatures.txt</signaturesFile>
-                </signaturesFiles>
-                -->
-              </configuration>
-              <executions>
-                <execution>
-                  <goals>
-                    <goal>check</goal>
-                    <goal>testCheck</goal>
-                  </goals>
-                </execution>
-              </executions>
+                <groupId>de.thetaphi</groupId>
+                <artifactId>forbiddenapis</artifactId>
+                <version>1.8</version>
+                <configuration>
+                    <!-- disallow undocumented classes like sun.misc.Unsafe: -->
+                    <internalRuntimeForbidden>true</internalRuntimeForbidden>
+                    <!--
+                      if the used Java version is too new,
+                      don't fail, just do nothing:
+                    -->
+                    <failOnUnsupportedJava>false</failOnUnsupportedJava>
+                    <bundledSignatures>
+                        <!--
+                          This will automatically choose the right
+                          signatures based on 'maven.compiler.target':
+                        -->
+                        <bundledSignature>jdk-unsafe</bundledSignature>
+                        <bundledSignature>jdk-deprecated</bundledSignature>
+                    </bundledSignatures>
+                    <!--
+                    <signaturesFiles>
+                      <signaturesFile>./rel/path/to/signatures.txt</signaturesFile>
+                    </signaturesFiles>
+                    -->
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                            <goal>testCheck</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
@@ -191,9 +186,14 @@
 
     <distributionManagement>
         <repository>
-            <id>sonatype-nexus-staging</id>
-            <name>Nexus Staging Repository</name>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+            <id>archiva.internal</id>
+            <name>Internal Release Repository</name>
+            <url>http://nexus.d.xiaomi.net/nexus/content/repositories/releases/</url>
         </repository>
+        <snapshotRepository>
+            <id>archiva.snapshots</id>
+            <name>Internal Snapshot Repository</name>
+            <url>http://nexus.d.xiaomi.net/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
     </distributionManagement>
 </project>

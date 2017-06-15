@@ -1,4 +1,4 @@
-package com.huaban.analysis.jieba;
+package com.huaban.analysis.misearch.jieba;
 
 public class Node {
     public Character value;

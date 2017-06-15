@@ -1,4 +1,4 @@
-package com.huaban.analysis.jieba;
+package com.huaban.analysis.misearch.jieba;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -53,7 +53,7 @@ class DictSegment implements Comparable<DictSegment> {
 
     /**
      * 匹配词段
-     * 
+     *
      * @param charArray
      * @return Hit
      */
@@ -64,7 +64,7 @@ class DictSegment implements Comparable<DictSegment> {
 
     /**
      * 匹配词段
-     * 
+     *
      * @param charArray
      * @param begin
      * @param length
@@ -77,7 +77,7 @@ class DictSegment implements Comparable<DictSegment> {
 
     /**
      * 匹配词段
-     * 
+     *
      * @param charArray
      * @param begin
      * @param length
@@ -91,8 +91,7 @@ class DictSegment implements Comparable<DictSegment> {
             searchHit = new Hit();
             // 设置hit的其实文本位置
             searchHit.setBegin(begin);
-        }
-        else {
+        } else {
             // 否则要将HIT状态重置
             searchHit.setUnmatch();
         }
@@ -115,8 +114,7 @@ class DictSegment implements Comparable<DictSegment> {
                 ds = segmentArray[position];
             }
 
-        }
-        else if (segmentMap != null) {
+        } else if (segmentMap != null) {
             // 在map中查找
             ds = (DictSegment) segmentMap.get(keyChar);
         }
@@ -126,8 +124,7 @@ class DictSegment implements Comparable<DictSegment> {
             if (length > 1) {
                 // 词未匹配完，继续往下搜索
                 return ds.match(charArray, begin + 1, length - 1, searchHit);
-            }
-            else if (length == 1) {
+            } else if (length == 1) {
 
                 // 搜索最后一个char
                 if (ds.nodeState == 1) {
@@ -151,7 +148,7 @@ class DictSegment implements Comparable<DictSegment> {
 
     /**
      * 加载填充词典片段
-     * 
+     *
      * @param charArray
      */
     void fillSegment(char[] charArray) {
@@ -161,7 +158,7 @@ class DictSegment implements Comparable<DictSegment> {
 
     /**
      * 屏蔽词典中的一个词
-     * 
+     *
      * @param charArray
      */
     void disableSegment(char[] charArray) {
@@ -171,7 +168,7 @@ class DictSegment implements Comparable<DictSegment> {
 
     /**
      * 加载填充词典片段
-     * 
+     *
      * @param charArray
      * @param begin
      * @param length
@@ -194,8 +191,7 @@ class DictSegment implements Comparable<DictSegment> {
             if (length > 1) {
                 // 词元还没有完全加入词典树
                 ds.fillSegment(charArray, begin + 1, length - 1, enabled);
-            }
-            else if (length == 1) {
+            } else if (length == 1) {
                 // 已经是词元的最后一个char,设置当前节点状态为enabled，
                 // enabled=1表明一个完整的词，enabled=0表示从词典中屏蔽当前词
                 ds.nodeState = enabled;
@@ -207,10 +203,9 @@ class DictSegment implements Comparable<DictSegment> {
 
     /**
      * 查找本节点下对应的keyChar的segment *
-     * 
+     *
      * @param keyChar
-     * @param create
-     *            =1如果没有找到，则创建新的segment ; =0如果没有找到，不创建，返回null
+     * @param create  =1如果没有找到，则创建新的segment ; =0如果没有找到，不创建，返回null
      * @return
      */
     private DictSegment lookforSegment(Character keyChar, int create) {
@@ -237,8 +232,7 @@ class DictSegment implements Comparable<DictSegment> {
                     this.storeSize++;
                     Arrays.sort(segmentArray, 0, this.storeSize);
 
-                }
-                else {
+                } else {
                     // 数组容量已满，切换Map存储
                     // 获取Map容器，如果Map未创建,则创建Map
                     Map<Character, DictSegment> segmentMap = getChildrenMap();
@@ -254,8 +248,7 @@ class DictSegment implements Comparable<DictSegment> {
 
             }
 
-        }
-        else {
+        } else {
             // 获取Map容器，如果Map未创建,则创建Map
             Map<Character, DictSegment> segmentMap = getChildrenMap();
             // 搜索Map
@@ -305,7 +298,7 @@ class DictSegment implements Comparable<DictSegment> {
 
     /**
      * 将数组中的segment迁移到Map中
-     * 
+     *
      * @param segmentArray
      */
     private void migrate(DictSegment[] segmentArray, Map<Character, DictSegment> segmentMap) {
@@ -319,7 +312,7 @@ class DictSegment implements Comparable<DictSegment> {
 
     /**
      * 实现Comparable接口
-     * 
+     *
      * @param o
      * @return int
      */

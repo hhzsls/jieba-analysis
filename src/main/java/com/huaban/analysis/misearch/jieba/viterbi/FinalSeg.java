@@ -1,32 +1,28 @@
-package com.huaban.analysis.jieba.viterbi;
+package com.huaban.analysis.misearch.jieba.viterbi;
+
+import com.huaban.analysis.misearch.jieba.CharacterUtil;
+import com.huaban.analysis.misearch.jieba.Node;
+import com.huaban.analysis.misearch.jieba.Pair;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 import java.util.regex.Matcher;
-import java.util.Collections;
-
-import com.huaban.analysis.jieba.CharacterUtil;
-import com.huaban.analysis.jieba.Pair;
-import com.huaban.analysis.jieba.Node;
 
 
 public class FinalSeg {
-    private static FinalSeg singleInstance;
     private static final String PROB_EMIT = "/prob_emit.txt";
-    private static char[] states = new char[] { 'B', 'M', 'E', 'S' };
+    private static FinalSeg singleInstance;
+    private static char[] states = new char[]{'B', 'M', 'E', 'S'};
     private static Map<Character, Map<Character, Double>> emit;
     private static Map<Character, Double> start;
     private static Map<Character, Map<Character, Double>> trans;
     private static Map<Character, char[]> prevStatus;
-    private static Double MIN_FLOAT = -3.14e100;;
+    private static Double MIN_FLOAT = -3.14e100;
+    ;
 
 
     private FinalSeg() {
@@ -45,10 +41,10 @@ public class FinalSeg {
     private void loadModel() {
         long s = System.currentTimeMillis();
         prevStatus = new HashMap<Character, char[]>();
-        prevStatus.put('B', new char[] { 'E', 'S' });
-        prevStatus.put('M', new char[] { 'M', 'B' });
-        prevStatus.put('S', new char[] { 'S', 'E' });
-        prevStatus.put('E', new char[] { 'B', 'M' });
+        prevStatus.put('B', new char[]{'E', 'S'});
+        prevStatus.put('M', new char[]{'M', 'B'});
+        prevStatus.put('S', new char[]{'S', 'E'});
+        prevStatus.put('E', new char[]{'B', 'M'});
 
         start = new HashMap<Character, Double>();
         start.put('B', -0.26268660809250016);
@@ -85,26 +81,22 @@ public class FinalSeg {
                 if (tokens.length == 1) {
                     values = new HashMap<Character, Double>();
                     emit.put(tokens[0].charAt(0), values);
-                }
-                else {
+                } else {
                     values.put(tokens[0].charAt(0), Double.valueOf(tokens[1]));
                 }
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             System.err.println(String.format(Locale.getDefault(), "%s: load model failure!", PROB_EMIT));
-        }
-        finally {
+        } finally {
             try {
                 if (null != is)
                     is.close();
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 System.err.println(String.format(Locale.getDefault(), "%s: close failure!", PROB_EMIT));
             }
         }
         System.out.println(String.format(Locale.getDefault(), "model load finished, time elapsed %d ms.",
-            System.currentTimeMillis() - s));
+                System.currentTimeMillis() - s));
     }
 
 
@@ -119,8 +111,7 @@ public class FinalSeg {
                     other = new StringBuilder();
                 }
                 chinese.append(ch);
-            }
-            else {
+            } else {
                 if (chinese.length() > 0) {
                     viterbi(chinese.toString(), tokens);
                     chinese = new StringBuilder();
@@ -199,8 +190,7 @@ public class FinalSeg {
             else if (pos == 'E') {
                 tokens.add(sentence.substring(begin, i + 1));
                 next = i + 1;
-            }
-            else if (pos == 'S') {
+            } else if (pos == 'S') {
                 tokens.add(sentence.substring(i, i + 1));
                 next = i + 1;
             }
